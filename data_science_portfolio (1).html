@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daman Lokesh | Data Science Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #04060d;
+      --panel: rgba(14, 22, 44, .55);
+      --text: #e8f1ff;
+      --muted: #8fa0c4;
+      --cyan: #4df3ff;
+      --violet: #9b6bff;
+      --pink: #ff4fa3;
+      --border: rgba(77, 243, 255, .18);
+      --display: "Space Grotesk", "Segoe UI", Arial, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--display);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    /* faint perspective grid + glow, fixed behind everything */
+    body::before {
+      content: ""; position: fixed; inset: 0; z-index: -2;
+      background:
+        radial-gradient(ellipse 60% 40% at 85% 0%, rgba(155,107,255,.22), transparent 70%),
+        radial-gradient(ellipse 50% 40% at 0% 100%, rgba(77,243,255,.14), transparent 70%),
+        linear-gradient(rgba(77,243,255,.05) 1px, transparent 1px) 0 0 / 56px 56px,
+        linear-gradient(90deg, rgba(77,243,255,.05) 1px, transparent 1px) 0 0 / 56px 56px;
+    }
+    a { color: inherit; text-decoration: none; }
+    :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+    .container { width: min(1100px, 92%); margin: auto; }
+
+    header {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(4,6,13,.7); backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; }
+    .logo { font-family: var(--mono); font-weight: 600; color: var(--cyan); letter-spacing: .5px; }
+    .logo::before { content: "> "; color: var(--pink); }
+    nav ul { display: flex; gap: 28px; list-style: none; font-size: .95rem; }
+    nav ul a { color: var(--muted); transition: color .2s, text-shadow .2s; }
+    nav ul a:hover { color: var(--cyan); text-shadow: 0 0 12px var(--cyan); }
+    .menu-btn { display: none; background: none; color: var(--text); border: 0; font-size: 1.5rem; cursor: pointer; }
+
+    /* hero */
+    .hero-wrap { position: relative; }
+    #net { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+    .hero { min-height: 86vh; display: grid; grid-template-columns: 1.3fr .7fr; align-items: center; gap: 48px; padding: 70px 0; }
+    .status { font-family: var(--mono); font-size: .85rem; color: var(--cyan); display: inline-flex; align-items: center; gap: 10px; }
+    .status::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 12px var(--cyan); animation: pulse 2s infinite; }
+    @keyframes pulse { 50% { opacity: .3; } }
+    h1 { font-size: clamp(2.6rem, 6.4vw, 5rem); line-height: 1.04; letter-spacing: -.03em; margin: 18px 0; font-weight: 700; }
+    h1 .name {
+      display: block;
+      background: linear-gradient(100deg, var(--cyan), var(--violet) 55%, var(--pink));
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 24px rgba(155,107,255,.35));
+    }
+    .hero p, .section-intro { color: var(--muted); max-width: 640px; }
+    .buttons { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 30px; }
+    .btn {
+      padding: 12px 22px; font-weight: 600; display: inline-block; position: relative;
+      border: 1px solid var(--border); background: rgba(77,243,255,.04);
+      clip-path: polygon(12px 0, 100% 0, 100% calc(100% - 12px), calc(100% - 12px) 100%, 0 100%, 0 12px);
+      transition: background .2s, box-shadow .2s, color .2s;
+    }
+    .btn:hover { background: rgba(77,243,255,.16); box-shadow: 0 0 28px rgba(77,243,255,.3); }
+    .btn.primary { background: var(--cyan); color: #03121a; border-color: var(--cyan); }
+    .btn.primary:hover { background: #8ff8ff; }
+
+    /* HUD profile card */
+    .hud { position: relative; padding: 34px 28px; text-align: center; background: var(--panel); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+    .hud::before, .hud::after, .corner::before, .corner::after {
+      content: ""; position: absolute; width: 18px; height: 18px; border: 2px solid var(--cyan);
+    }
+    .hud::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+    .hud::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
+    .avatar-ring { width: 156px; height: 156px; margin: 0 auto 22px; position: relative; display: grid; place-items: center; }
+    .avatar-ring::before {
+      content: ""; position: absolute; inset: 0; border-radius: 50%;
+      background: conic-gradient(from 0deg, var(--cyan), transparent 35%, var(--pink) 60%, transparent 85%, var(--cyan));
+      -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+      mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 2px));
+      animation: spin 9s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .avatar { width: 128px; height: 128px; border-radius: 50%; display: grid; place-items: center; font-size: 2.8rem; font-weight: 700; color: var(--cyan); background: radial-gradient(circle, #14224a, #070c1c); box-shadow: inset 0 0 30px rgba(77,243,255,.25); }
+    .hud h2 { font-size: 1.25rem; }
+    .hud small { display: block; margin-top: 6px; color: var(--muted); font-family: var(--mono); font-size: .78rem; }
+
+    section { padding: 80px 0; }
+    .section-title { font-size: clamp(1.8rem, 3.4vw, 2.4rem); letter-spacing: -.02em; margin-bottom: 10px; display: flex; align-items: center; gap: 16px; }
+    .section-title::after { content: ""; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border), transparent); }
+    .section-intro { margin-bottom: 34px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { position: relative; background: var(--panel); border: 1px solid var(--border); padding: 26px; backdrop-filter: blur(8px); }
+    .card::before { content: ""; position: absolute; top: -1px; left: -1px; width: 14px; height: 14px; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+    .card h3 { margin-bottom: 10px; font-size: 1.15rem; }
+    .card p { color: var(--muted); font-size: .96rem; }
+    .project-card { transition: border-color .25s, box-shadow .25s; }
+    .project-card:hover { border-color: var(--cyan); box-shadow: 0 0 36px rgba(77,243,255,.16), inset 0 0 30px rgba(77,243,255,.05); }
+    .project-type { font-family: var(--mono); font-size: .76rem; color: var(--pink); }
+    .project-card h3 { margin: 10px 0; }
+    .project-card .links { margin-top: 18px; color: var(--cyan); font-family: var(--mono); font-size: .88rem; }
+    .project-card .links a:hover { text-shadow: 0 0 12px var(--cyan); }
+
+    .tag-list { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag { font-family: var(--mono); font-size: .85rem; padding: 7px 14px; color: #c5f9ff; background: rgba(77,243,255,.06); border: 1px solid var(--border); transition: border-color .2s, box-shadow .2s; }
+    .tag:hover { border-color: var(--cyan); box-shadow: 0 0 16px rgba(77,243,255,.3); }
+
+    .contact-box { position: relative; padding: 40px; background: linear-gradient(135deg, rgba(155,107,255,.14), rgba(77,243,255,.06)); border: 1px solid var(--border); }
+    .contact-box p { color: var(--muted); margin: 8px 0 22px; }
+    footer { border-top: 1px solid var(--border); color: var(--muted); font-family: var(--mono); font-size: .8rem; text-align: center; padding: 26px 0; }
+
+    @media (max-width: 760px) {
+      .hero { grid-template-columns: 1fr; text-align: center; }
+      .hero p { margin: auto; }
+      .buttons { justify-content: center; }
+      .grid { grid-template-columns: 1fr; }
+      nav ul { display: none; position: absolute; top: 100%; left: 0; right: 0; padding: 20px; background: rgba(4,6,13,.96); flex-direction: column; text-align: center; border-bottom: 1px solid var(--border); }
+      nav ul.open { display: flex; }
+      .menu-btn { display: block; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <a class="logo" href="#home">D.L / portfolio</a>
+        <button class="menu-btn" id="menuBtn" aria-label="Toggle navigation">☰</button>
+        <ul id="navLinks">
+          <li><a href="#about">About</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="hero-wrap">
+      <canvas id="net" aria-hidden="true"></canvas>
+      <div class="container hero" id="home">
+        <div>
+          <div class="status">Data Science · Statistics · Analytics</div>
+          <h1>I turn data into insights.<span class="name">Daman Lokesh</span></h1>
+          <p>
+            I'm a Data Science and Statistics student interested in machine learning,
+            data analytics, and building useful applications that solve real-world problems.
+          </p>
+          <div class="buttons">
+            <a class="btn primary" href="#projects">Explore my work</a>
+            <a class="btn" href="#contact">Contact me</a>
+          </div>
+        </div>
+        <div class="hud">
+          <div class="avatar-ring"><div class="avatar">DL</div></div>
+          <h2>Data Science Student</h2>
+          <small>Python · R · SQL · Machine Learning</small>
+        </div>
+      </div>
+    </div>
+
+    <section id="about">
+      <div class="container">
+        <h2 class="section-title">About Me</h2>
+        <p class="section-intro">
+          I am pursuing a degree in Data Science and Statistics. I enjoy exploring datasets,
+          finding patterns, and communicating results through visualizations and applications.
+          My goal is to develop strong analytical and technical skills while working on
+          practical projects.
+        </p>
+        <div class="grid">
+          <article class="card"><h3>📊 Data Analytics</h3><p>Cleaning, exploring, and interpreting data to support decisions.</p></article>
+          <article class="card"><h3>🤖 Machine Learning</h3><p>Learning predictive models and applying statistical techniques.</p></article>
+          <article class="card"><h3>💻 Development</h3><p>Building websites and interactive data-driven applications.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="container">
+        <h2 class="section-title">Technical Skills</h2>
+        <p class="section-intro">Tools and technologies I work with.</p>
+        <div class="tag-list">
+          <span class="tag">Python</span><span class="tag">R Programming</span>
+          <span class="tag">SQL</span><span class="tag">Pandas</span>
+          <span class="tag">NumPy</span><span class="tag">Matplotlib</span>
+          <span class="tag">Statistics</span><span class="tag">Machine Learning</span>
+          <span class="tag">HTML</span><span class="tag">CSS</span>
+          <span class="tag">JavaScript</span><span class="tag">Streamlit</span>
+          <span class="tag">Git &amp; GitHub</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <div class="container">
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-intro">A selection of projects showcasing my learning and problem-solving.</p>
+        <div class="grid">
+          <article class="card project-card">
+            <span class="project-type">Statistics · R</span>
+            <h3>Manufacturing Quality Control</h3>
+            <p>Compared estimation methods and analyzed manufacturing defects using statistical inference and confidence intervals.</p>
+            <div class="links"><a href="#" class="project-link">GitHub link →</a></div>
+          </article>
+          <article class="card project-card">
+            <span class="project-type">AI · Streamlit</span>
+            <h3>SmartStudy Agent</h3>
+            <p>An AI-based study assistant designed to help students organize and prioritize their learning.</p>
+            <div class="links"><a href="https://ai-app-vyym3wfhb7xsqcoizgwkir.streamlit.app/" target="_blank" rel="noopener">View app →</a></div>
+          </article>
+          <article class="card project-card">
+            <span class="project-type">Finance · Data Science</span>
+            <h3>Financial Analytics</h3>
+            <p>A project idea exploring financial data, trends, and visual insights for better decision-making.</p>
+            <div class="links"><a href="#" class="project-link">GitHub link →</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <div class="container">
+        <h2 class="section-title">Experience &amp; Certifications</h2>
+        <p class="section-intro">Add your certificates, internships, workshops, and achievements here.</p>
+        <div class="grid">
+          <article class="card"><h3>Data Science Intern</h3><p>Prodigy InfoTech · 2026</p><p>Worked on data science learning tasks and practical analysis.</p></article>
+          <article class="card"><h3>Data Science Intern</h3><p>Krutanic Solutions · 2026</p><p>Developed foundational experience with data science workflows.</p></article>
+          <article class="card"><h3>Certifications</h3><p>Add certificate title, issuing organization, and completion date.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <div class="container">
+        <div class="contact-box corner">
+          <h2 class="section-title">Let's Connect</h2>
+          <p>Have an opportunity, collaboration, or project idea? Feel free to reach out.</p>
+          <div class="buttons">
+            <a class="btn primary" href="mailto:your.email@example.com">Email me</a>
+            <a class="btn" href="https://www.linkedin.com/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="btn" href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> Daman Lokesh · Data Science Portfolio</div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("menuBtn");
+    const navLinks = document.getElementById("navLinks");
+
+    menuBtn.addEventListener("click", () => {
+      navLinks.classList.toggle("open");
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => navLinks.classList.remove("open"));
+    });
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    document.querySelectorAll(".project-link").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        alert("Replace this placeholder with your actual GitHub project URL.");
+      });
+    });
+
+    /* Hero network: drifting nodes that link up and lean toward the cursor */
+    (function () {
+      const canvas = document.getElementById("net");
+      const ctx = canvas.getContext("2d");
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let w, h, nodes = [], mouse = { x: -999, y: -999 };
+
+      function resize() {
+        const r = canvas.getBoundingClientRect();
+        const dpr = Math.min(devicePixelRatio || 1, 2);
+        w = r.width; h = r.height;
+        canvas.width = w * dpr; canvas.height = h * dpr;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.round(Math.min(90, (w * h) / 14000));
+        nodes = Array.from({ length: count }, () => ({
+          x: Math.random() * w, y: Math.random() * h,
+          vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+          hot: Math.random() < .12
+        }));
+      }
+
+      function frame() {
+        ctx.clearRect(0, 0, w, h);
+        for (const n of nodes) {
+          if (!still) {
+            const dx = mouse.x - n.x, dy = mouse.y - n.y, d = Math.hypot(dx, dy);
+            if (d < 160) { n.vx += dx / d * .01; n.vy += dy / d * .01; }
+            n.vx *= .995; n.vy *= .995;
+            n.x += n.vx; n.y += n.vy;
+            if (n.x < 0 || n.x > w) n.vx *= -1;
+            if (n.y < 0 || n.y > h) n.vy *= -1;
+          }
+        }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+            if (d < 130) {
+              ctx.strokeStyle = "rgba(77,243,255," + (1 - d / 130) * .35 + ")";
+              ctx.lineWidth = 1;
+              ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+        }
+        for (const n of nodes) {
+          ctx.fillStyle = n.hot ? "#ff4fa3" : "#4df3ff";
+          ctx.shadowColor = ctx.fillStyle; ctx.shadowBlur = n.hot ? 12 : 6;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.hot ? 2.6 : 1.8, 0, 6.283); ctx.fill();
+        }
+        ctx.shadowBlur = 0;
+        if (!still) requestAnimationFrame(frame);
+      }
+
+      addEventListener("resize", () => { resize(); if (still) frame(); });
+      canvas.parentElement.addEventListener("pointermove", e => {
+        const r = canvas.getBoundingClientRect();
+        mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
+      });
+      canvas.parentElement.addEventListener("pointerleave", () => { mouse.x = mouse.y = -999; });
+      resize(); frame();
+    })();
+  </script>
+</body>
+</html>
